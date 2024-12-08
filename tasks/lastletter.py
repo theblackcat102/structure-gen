@@ -1,5 +1,5 @@
 import json
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, Field
 from .base import BaseJSONPrompter, BaseXMLPrompter, BaseTextPrompter, BaseYAMLPrompter
 from .llm_parser import LLMParser
 
@@ -147,10 +147,22 @@ class LastLetterStructureV2(BaseModel):
 class LastLetterStructureV3(BaseModel):
     think_step_by_step: str
     answer: str
+# biased decoding
+class LastLetterStructureV1WithRestriction(BaseModel):
+    reason: constr(max_length=300)
+    answer: str = Field(pattern=r'[A-Za-z]{4}')
+
+class LastLetterStructureV2WithRestriction(BaseModel):
+    step_by_step_reasoning: constr(max_length=300)
+    answer: str = Field(pattern=r'[A-Za-z]{4}')
+
+class LastLetterStructureV3WithRestriction(BaseModel):
+    think_step_by_step: constr(max_length=300)
+    answer: str = Field(pattern=r'[A-Za-z]{4}')
 
 class Step(BaseModel):
     explanation: str
-    output: str
+    output: str = Field(pattern=r'[A-Za-z]{4}')
 
 class LastLetterStructureV4(BaseModel):
     steps: list[Step]
@@ -163,11 +175,22 @@ class OAIStructPrompter(BaseJSONPrompter):
         super().__init__(template_src, num_shots)
         self.schema = LastLetterStructureV1
         if 'f1' in template_src:
-            self.schema = LastLetterStructureV1
+            if 'biased_parser' in self.config:
+                self.schema = LastLetterStructureV1WithRestriction
+            else:
+                self.schema = LastLetterStructureV1
         elif 'f2' in template_src:
-            self.schema = LastLetterStructureV2
+            if 'biased_parser' in self.config:
+                self.schema = LastLetterStructureV2WithRestriction
+            else:
+                self.schema = LastLetterStructureV2
+
         elif 'f3' in template_src:
-            self.schema = LastLetterStructureV3
+            if 'biased_parser' in self.config:
+                self.schema = LastLetterStructureV3WithRestriction
+            else:
+                self.schema = LastLetterStructureV3
+
         elif 'f4' in template_src:
             self.schema = LastLetterStructureV4
 

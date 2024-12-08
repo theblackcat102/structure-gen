@@ -42,8 +42,12 @@ def process_dataset(model_name, dataset_name, prompt_style, prompt_version=None,
 
     os.makedirs("logging", exist_ok=True)
     os.makedirs("logging/"+task_module, exist_ok=True)
+    if model_series in ['outlines', 'xgrammar', 'tgi', 'sglang']:
+        model_basename = model_series+'-'+model_name.split('/')[-1]
+    else:
+        model_basename = model_name.split('/')[-1]
 
-    result_file = f"logging/{task_module}/{prefix}{prompt_style}_{model_name.split('/')[-1]}_shots_{num_shots}.jsonl"
+    result_file = f"logging/{task_module}/{prefix}{prompt_style}_{model_basename}_shots_{num_shots}.jsonl"
     print(result_file)
     print(prompt_version)
 

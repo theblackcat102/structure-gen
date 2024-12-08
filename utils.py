@@ -44,6 +44,18 @@ def get_llm(model_name: str, series: str = None):
     elif series == 'hf_model':
         from llms.hf_model import HFModel
         return HFModel(model_name)
+    elif series == 'outlines':
+        from llms.outlines_model import OutlinesStructure
+        return OutlinesStructure(model_name)
+    elif series == 'xgrammar':
+        from llms.xgrammar_model import XGrammar
+        return XGrammar(model_name)
+    elif series == 'tgi':
+        from llms.tgi_grammar_model import TGI
+        return TGI(model_name)
+    elif series == 'sglang':
+        from llms.sglang_model import SGLang
+        return SGLang(model_name)
     elif series == "groq":
         from llms.groq_model import GroqModel
         return GroqModel(model_name)
@@ -51,6 +63,7 @@ def get_llm(model_name: str, series: str = None):
         from llms.together_model import TogetherModel
         return TogetherModel(model_name)
     raise ValueError('series : {} for {} is not yet supported'.format(series, model_name))
+
 
 
 
