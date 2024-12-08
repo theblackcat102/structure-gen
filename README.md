@@ -10,6 +10,11 @@
   </a>
 </div>
 
+**Update:**
+
+- 2024/12/09 : We have since added a [updated note](./updates.md) on structure generation libraries and found different results
+
+
 Structured generation, the process of producing content in standardized formats like JSON and XML, is widely utilized in real-world applications to extract key output information from large language models (LLMs). This study investigates whether such constraints on generation space impact LLMs' abilities, including reasoning and domain knowledge comprehension.
 
 ## Environment Setup
